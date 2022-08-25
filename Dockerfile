@@ -1,3 +1,4 @@
-FROM openjdk:17
-COPY target/inside-test-0.0.1-SNAPSHOT.jar inside-test-docker.jar
-ENTRYPOINT ["java","-jar","inside-test-docker.jar"]
+FROM openjdk:17-alpine
+ARG JAR_FILE=target/*.jar
+COPY ${JAR_FILE} develop04/inside-test-docker.jar
+ENTRYPOINT ["java","-jar","/develop04/inside-test-docker.jar"]

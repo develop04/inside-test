@@ -1,13 +1,18 @@
 package com.insidetest.service;
 
 
+import javax.crypto.spec.SecretKeySpec;
+import javax.xml.bind.DatatypeConverter;
+import java.security.Key;
+import io.jsonwebtoken.*;
+import io.jsonwebtoken.Jwts;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
 import java.util.Optional;
-import java.util.UUID;
+
 
 @Service
 @RequiredArgsConstructor
@@ -32,8 +37,14 @@ public class AuthenticationService {
     /**
      * Генерация jwt-токена и занесение его в таблицу Tokens
      */
-    public String generateToken(int userid) {
-        String token = UUID.randomUUID().toString();
+    public String generateToken(int userid, String name, String password) {
+        SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
+
+        byte[] apiKeySecretBytes = DatatypeConverter.parseBase64Binary(password);
+        Key signingKey = new SecretKeySpec(apiKeySecretBytes, signatureAlgorithm.getJcaName());
+
+        String token = Jwts.builder().claim("name", name).signWith(signatureAlgorithm, signingKey).compact();
+
         String sql = """
                 INSERT INTO test_db.Tokens(token, user_id) VALUES (:token, :userid)
                 ON DUPLICATE KEY UPDATE token = :token

@@ -43,7 +43,7 @@ public class Controller {
         if (userPassword.name() != null && userPassword.password() != null) {
             Optional<Integer> userId = authenticationService.getUserId(userPassword.name(), userPassword.password());
             if (userId.isPresent()) {
-                return new TokenMsg(authenticationService.generateToken(userId.get()));
+                return new TokenMsg(authenticationService.generateToken(userId.get(), userPassword.name(), userPassword.password()));
             }
         }
 

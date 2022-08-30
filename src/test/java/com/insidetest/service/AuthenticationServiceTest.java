@@ -25,6 +25,7 @@ public class AuthenticationServiceTest {
     @InjectMocks
     private AuthenticationService authenticationService;
 
+
     @Test
     void getUserIdPositiveTest() {
         int id = 100;
@@ -46,7 +47,7 @@ public class AuthenticationServiceTest {
 
     @Test
     public void generateToken() {
-        authenticationService.generateToken(0);
+        authenticationService.generateToken(0, "String", "String");
         Mockito.verify(jdbcTemplate, times(1)).update(any(String.class), any(Map.class));
     }
 
